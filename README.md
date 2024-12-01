@@ -7,6 +7,8 @@
 ./downloadDayInput.sh 3
 ```
 
+## Run the solutions
+
 Ensure input files are in the `Input` directory (named `01.txt` and so on) and in the repo root run:
 ```bash
 # e.g. for day 03
