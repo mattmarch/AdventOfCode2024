@@ -9,3 +9,8 @@ let splitBy (separator: string) (inputString: string) : string list =
 
 let readFile day =
     File.ReadLines $"Inputs/{day}.txt" |> Seq.filter (fun x -> x.Length > 0)
+
+let (|Integer|_|) (str: string) =
+    match Int32.TryParse(str) with
+    | (true, integer) -> Some(integer)
+    | _ -> None

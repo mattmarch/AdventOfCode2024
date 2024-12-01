@@ -3,14 +3,14 @@
 open AdventOfCode2024.Common
 
 let parseLine line =
-    match line |> splitBy " " |> List.map int with
-    | [ a; b ] -> (a, b)
-    | l -> failwith $"Invalid input, found ${List.length} items on line, expected 2"
+    match line |> splitBy " " with
+    | [ Integer a; Integer b ] -> (a, b)
+    | l -> failwith $"Invalid input, found ${List.length l} items on line, expected 2"
 
 let itemSimularityScore list item =
     item * (list |> Seq.filter ((=) item) |> Seq.length)
 
-let solve =
+let solve () =
     let inputLines = readFile "01"
 
     let leftList, rightList =

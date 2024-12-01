@@ -9,5 +9,7 @@
 
 Ensure input files are in the `Input` directory (named `01.txt` and so on) and in the repo root run:
 ```bash
-dotnet run --project AdventOfCode2024
+# e.g. for day 03
+dotnet run --project AdventOfCode2024 3
 ```
+or leave out the day number to run every day.
