@@ -1,7 +1,5 @@
-﻿// For more information see https://aka.ms/fsharp-console-apps
+﻿open AdventOfCode2024
 
-open AdventOfCode2024
-
-printfn "Hello from F#"
+printfn "Advent of Code 2024 solutions"
 
 Day01.solve
