@@ -5,7 +5,11 @@ open AdventOfCode2024.Common
 let parseLine line = line |> splitBy " " |> List.map int
 
 let differences (levels: int list) =
-    levels |> Seq.windowed 2 |> Seq.map (fun [| a; b |] -> (b - a))
+    levels
+    |> Seq.windowed 2
+    |> Seq.map (function
+        | [| a; b |] -> b - a
+        | _ -> failwith "Invalid windowed output")
 
 let isSafe (report: int list) =
     let differences = differences report
