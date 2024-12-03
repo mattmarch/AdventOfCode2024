@@ -5,9 +5,9 @@ open AdventOfCode2024.Common
 let parseLine line =
     match line |> splitBy " " with
     | [ Integer a; Integer b ] -> (a, b)
-    | l -> failwith $"Invalid input, found ${List.length l} items on line, expected 2"
+    | l -> failwith $"Invalid input, found ${List.length l} items on line, expected 2 integers"
 
-let itemSimularityScore list item =
+let itemSimilarityScore list item =
     item * (list |> Seq.filter ((=) item) |> Seq.length)
 
 let solve () =
@@ -22,6 +22,6 @@ let solve () =
 
     printfn $"Day 01 - Part 1: %d{differencesSum}"
 
-    let simularityScore = leftList |> Seq.sumBy (itemSimularityScore rightList)
+    let similarity = leftList |> Seq.sumBy (itemSimilarityScore rightList)
 
-    printfn $"Day 01 - Part 2: %d{simularityScore}"
+    printfn $"Day 01 - Part 2: %d{similarity}"

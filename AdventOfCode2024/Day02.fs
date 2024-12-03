@@ -22,10 +22,7 @@ let allRemovedPossibilities (report: int list) =
     report |> Seq.mapi (fun i _ -> report |> List.removeAt i)
 
 let isSafeWithOneRemoved (report: int list) =
-    if isSafe report then
-        true
-    else
-        report |> allRemovedPossibilities |> Seq.exists isSafe
+    isSafe report || report |> allRemovedPossibilities |> Seq.exists isSafe
 
 let solve () =
     let inputLines = readLines "02"

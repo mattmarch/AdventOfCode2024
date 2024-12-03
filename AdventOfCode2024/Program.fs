@@ -5,7 +5,7 @@ printfn "Advent of Code 2024 solutions"
 
 let solutions = [ Day01.solve; Day02.solve; Day03.solve ]
 
-let args = System.Environment.GetCommandLineArgs().[1..] |> Array.toList
+let args = System.Environment.GetCommandLineArgs()[1..] |> Array.toList
 
 match args with
 | [] ->

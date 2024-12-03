@@ -9,7 +9,7 @@ let disabledSectionRegex = Regex "don't\\(\\)[\s\S]+?(do\\(\\)|$)"
 let part1 text =
     text
     |> mulRegex.Matches
-    |> Seq.map (fun m -> (int64 m.Groups.[1].Value) * (int64 m.Groups.[2].Value))
+    |> Seq.map (fun m -> (int64 m.Groups[1].Value) * (int64 m.Groups[2].Value))
     |> Seq.sum
 
 let solve () =
