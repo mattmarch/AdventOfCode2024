@@ -28,7 +28,7 @@ let isSafeWithOneRemoved (report: int list) =
         report |> allRemovedPossibilities |> Seq.exists isSafe
 
 let solve () =
-    let inputLines = readFile "02"
+    let inputLines = readLines "02"
     let safeReports = inputLines |> Seq.map parseLine |> Seq.filter isSafe |> Seq.length
     printfn $"Day 02 - Part 1: %d{safeReports}"
 

@@ -11,7 +11,7 @@ let itemSimularityScore list item =
     item * (list |> Seq.filter ((=) item) |> Seq.length)
 
 let solve () =
-    let inputLines = readFile "01"
+    let inputLines = readLines "01"
 
     let leftList, rightList =
         inputLines |> Seq.map parseLine |> Seq.toList |> List.unzip
