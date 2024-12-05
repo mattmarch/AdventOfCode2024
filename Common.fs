@@ -17,3 +17,19 @@ let (|Integer|_|) (str: string) =
     match Int32.TryParse(str) with
     | (true, integer) -> Some(integer)
     | _ -> None
+
+let unpack2 (l: 'a seq) =
+    match l |> Seq.toList with
+    | [ a; b ] -> (a, b)
+    | _ -> failwith "Expected a list of length 2"
+
+let splitSeq (predicate: 'a -> bool) (input: 'a seq) : ('a seq * 'a seq) =
+    let groups = input |> Seq.groupBy predicate |> Seq.toList
+
+    match groups with
+    | [ (true, trues); (false, falses) ] -> (trues, falses)
+    | [ (false, falses); (true, trues) ] -> (trues, falses)
+    | [ (true, trues) ] -> (trues, [])
+    | [ (false, falses) ] -> ([], falses)
+    | [] -> ([], [])
+    | _ -> failwithf "Impossible output from groupBy in splitSeq"
