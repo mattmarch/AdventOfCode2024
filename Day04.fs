@@ -2,7 +2,6 @@
 
 open Common
 
-type Vec2d = int * int
 type WordSearch = Map<Vec2d, char>
 
 let parseFile (input: string seq) : WordSearch =
@@ -13,8 +12,6 @@ let parseFile (input: string seq) : WordSearch =
 
 let allDirections =
     [ (0, -1); (1, -1); (1, 0); (1, 1); (0, 1); (-1, 1); (-1, 0); (-1, -1) ]
-
-let addVec2d (a, b) (c, d) = (a + c, b + d)
 
 let checkRestOfWord (wordSearch: WordSearch) (start: Vec2d) (direction: Vec2d) (word: char list) =
     let rec checkRestOfWord' coord word =

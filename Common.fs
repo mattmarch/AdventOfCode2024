@@ -33,3 +33,7 @@ let splitSeq (predicate: 'a -> bool) (input: 'a seq) : ('a seq * 'a seq) =
     | [ (false, falses) ] -> ([], falses)
     | [] -> ([], [])
     | _ -> failwithf "Impossible output from groupBy in splitSeq"
+
+type Vec2d = int * int
+
+let addVec2d (a, b) (c, d) = (a + c, b + d)
