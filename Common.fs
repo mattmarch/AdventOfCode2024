@@ -36,4 +36,14 @@ let splitSeq (predicate: 'a -> bool) (input: 'a seq) : ('a seq * 'a seq) =
 
 type Vec2d = int * int
 
-let addVec2d (a, b) (c, d) = (a + c, b + d)
+let addVec2d (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
+
+let subVec2d (x1, y1) (x2, y2) = (x1 - x2, y1 - y2)
+
+let greatestCommonFactor a b =
+    let rec gcf a b =
+        if a = 0 then b
+        elif a < b then gcf a (b - a)
+        else gcf (a - b) b
+
+    gcf (abs a) (abs b)
