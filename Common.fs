@@ -47,3 +47,6 @@ let greatestCommonFactor a b =
         else gcf (a - b) b
 
     gcf (abs a) (abs b)
+
+
+let charToInt (c: char) = int c - int '0'

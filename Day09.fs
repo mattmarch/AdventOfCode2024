@@ -6,7 +6,6 @@ type Block =
     | Empty
     | Used of int
 
-let charToInt c = int c - int '0'
 
 let parseInput input =
     input
