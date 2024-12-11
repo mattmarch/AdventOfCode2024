@@ -45,17 +45,27 @@ let outsideBounds (xLim, yLim) (x, y) =
     x >= xLim || x < 0 || y >= yLim || y < 0
 
 let traverseGrid bounds grid start =
-    let rec takeStep from direction =
-        let nextStep = addVec2d from direction
+    let initialDirection = (0, -1)
 
-        if outsideBounds bounds nextStep then
-            []
+    (initialDirection, start)
+    |> Seq.unfold (fun (direction, from) ->
+        if outsideBounds bounds from then
+            None
         else
-            match grid |> Set.contains nextStep with
-            | true -> takeStep from (nextDirection direction)
-            | false -> nextStep :: takeStep nextStep direction
+            let nextStep = addVec2d from direction
 
-    start :: takeStep start (0, -1)
+            if grid |> Set.contains nextStep then
+                Some((direction, from), (nextDirection direction, from))
+            else
+                Some((direction, from), (direction, nextStep)))
+
+// Super nasty (and slow) check for a loop by assuming all non-loop paths have length < 10000
+// (It is faster than keeping track of a Set of all visited squares though!)
+let maxLength = 10000
+
+let hasLoop bounds start obstacles =
+    traverseGrid bounds obstacles start |> Seq.truncate maxLength |> Seq.length = maxLength
+
 
 let solve () =
     let input = readLines "06"
@@ -63,6 +73,14 @@ let solve () =
     let ySize = input |> Seq.length
     let xSize = input |> Seq.head |> String.length
     let traversedSquares = traverseGrid (xSize, ySize) obstacles start
-    let result = traversedSquares |> List.distinct |> List.length
+    let squaresVisited = traversedSquares |> Seq.map snd |> Seq.distinct
+    let result = Seq.length squaresVisited
 
     printfn $"Day 06 - Part 1: %d{result}"
+
+    let result2 =
+        squaresVisited
+        |> Seq.filter (fun sq -> hasLoop (xSize, ySize) start (obstacles |> Set.add sq))
+        |> Seq.length
+
+    printfn $"Day 06 - Part 2: %d{result2}"
