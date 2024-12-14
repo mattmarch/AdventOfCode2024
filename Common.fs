@@ -18,6 +18,11 @@ let (|Integer|_|) (str: string) =
     | (true, integer) -> Some(integer)
     | _ -> None
 
+let (|Int64|_|) (str: string) =
+    match Int64.TryParse(str) with
+    | (true, integer) -> Some(integer)
+    | _ -> None
+
 let unpack2 (l: 'a seq) =
     match l |> Seq.toList with
     | [ a; b ] -> (a, b)
@@ -35,6 +40,8 @@ let splitSeq (predicate: 'a -> bool) (input: 'a seq) : ('a seq * 'a seq) =
     | _ -> failwithf "Impossible output from groupBy in splitSeq"
 
 type Vec2d = int * int
+
+type Vec2dL = int64 * int64
 
 let addVec2d (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
 

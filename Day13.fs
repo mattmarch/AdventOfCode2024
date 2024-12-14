@@ -3,8 +3,6 @@
 open System.Text.RegularExpressions
 open AdventOfCode2024.Common
 
-type Vec2dL = int64 * int64
-
 type MachineDescription =
     { ButtonA: Vec2dL
       ButtonB: Vec2dL
