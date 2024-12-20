@@ -28,6 +28,11 @@ let unpack2 (l: 'a seq) =
     | [ a; b ] -> (a, b)
     | _ -> failwith "Expected a list of length 2"
 
+let unpack3 (l: 'a seq) =
+    match l |> Seq.toList with
+    | [ a; b; c ] -> (a, b, c)
+    | _ -> failwith "Expected a list of length 3"
+
 let splitSeq (predicate: 'a -> bool) (input: 'a seq) : ('a seq * 'a seq) =
     let groups = input |> Seq.groupBy predicate |> Seq.toList
 
