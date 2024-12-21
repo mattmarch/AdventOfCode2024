@@ -69,6 +69,14 @@ let findCheatTimeSavings route wallToSkip =
     |> Seq.map (fun (_, group) -> group |> Seq.map (fun (startT, endT) -> endT - startT - 2) |> Seq.max)
     |> Seq.filter ((<) 0)
 
+let manhattanDistance (x1, y1) (x2, y2) = abs (x1 - x2) + abs (y1 - y2)
+
+let find20psCheatTimeSavings route fromPos fromT =
+    route
+    |> List.filter (fun (p, _) -> manhattanDistance fromPos p <= 20)
+    |> List.map (fun (p, t) -> t - fromT - (manhattanDistance fromPos p))
+    |> List.filter ((<) 0)
+
 let solve () =
     let grid = readLines "20" |> parse
     let route = traverseStandardRoute grid
@@ -81,3 +89,13 @@ let solve () =
         |> Seq.length
 
     printfn $"Day 20 - Part 1: %d{result}"
+
+    let routeList = route |> Map.toList
+
+    let result2 =
+        routeList
+        |> List.collect (fun (pos, t) -> find20psCheatTimeSavings routeList pos t)
+        |> List.filter ((<=) 100)
+        |> List.length
+
+    printfn $"Day 20 - Part 2: %d{result2}"
