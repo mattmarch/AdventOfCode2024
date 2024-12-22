@@ -42,32 +42,68 @@ let getDirectionPressesToNextPosition fromPosition toPosition =
     @ List.replicate (abs x) horizontalDir
     @ [ A ]
 
+
+
 let getDirectionPressesToNextNumber fromButton toButton =
-    getDirectionPressesToNextPosition (numericButtonPosition toButton) (numericButtonPosition fromButton)
+    let fromPos = numericButtonPosition fromButton
+    let toPos = numericButtonPosition toButton
+    let x, y = subVec2d toPos fromPos
+
+    match fromPos, toPos with
+    | (0, _), (_, 3) ->
+        // need to move right before down to avoid panic square
+        List.replicate x Right @ List.replicate y Down @ [ A ]
+    | (_, 3), (0, _) ->
+        // need to move up before left to avoid panic square
+        List.replicate (-y) Up @ List.replicate (-x) Left @ [ A ]
+    | _ ->
+        // else prioritise Left > Down > Right > Up
+        List.replicate (if x < 0 then -x else 0) Left
+        @ List.replicate (if y > 0 then y else 0) Down
+        @ List.replicate (if x > 0 then x else 0) Right
+        @ List.replicate (if y < 0 then -y else 0) Up
+        @ [ A ]
 
 let getDirectionPressesForCode (code: string) =
     Seq.pairwise $"A{code}"
     |> Seq.collect (fun (fromButton, toButton) -> getDirectionPressesToNextNumber fromButton toButton)
 
 let getDirectionPressesToNextDirection fromDirection toDirection =
-    getDirectionPressesToNextPosition (directionButtonPosition toDirection) (directionButtonPosition fromDirection)
+    let x, y =
+        subVec2d (directionButtonPosition toDirection) (directionButtonPosition fromDirection)
+
+    if toDirection = Left then
+        // Going to "<" need to move down first to avoid panic square
+        List.replicate y Down @ List.replicate (-x) Left @ [ A ]
+    else
+        // else prioritise Left > Down > Right > Up
+        List.replicate (if x < 0 then -x else 0) Left
+        @ List.replicate (if y > 0 then y else 0) Down
+        @ List.replicate (if x > 0 then x else 0) Right
+        @ List.replicate (if y < 0 then -y else 0) Up
+        @ [ A ]
 
 let getDirectionPressesForDirectionSequence directions =
     Seq.append [ A ] directions
     |> Seq.pairwise
     |> Seq.collect (fun (fromDirection, toDirection) -> getDirectionPressesToNextDirection fromDirection toDirection)
 
-let getComplexity code =
+let rec translateButtonPressesNRobots n directions =
+    match n with
+    | 0 -> directions
+    | _ -> translateButtonPressesNRobots (n - 1) (getDirectionPressesForDirectionSequence directions)
+
+let getComplexity n code =
     let buttonPresses =
-        code
-        |> getDirectionPressesForCode
-        |> getDirectionPressesForDirectionSequence
-        |> getDirectionPressesForDirectionSequence
+        code |> getDirectionPressesForCode |> translateButtonPressesNRobots n
 
     (code.Replace("A", "") |> int) * (Seq.length buttonPresses)
 
-
 let solve () =
-    let result = readLines "21" |> Seq.sumBy getComplexity
+    let input = readLines "21"
+    let result = input |> Seq.sumBy (getComplexity 2)
 
     printfn $"Day 21 - Part 1: %d{result}"
+
+    let result2 = input |> Seq.sumBy (getComplexity 25)
+    printfn $"Day 21 - Part 2: %d{result2}"
