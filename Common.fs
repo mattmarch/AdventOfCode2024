@@ -1,6 +1,7 @@
 ﻿module AdventOfCode2024.Common
 
 open System
+open System.Collections.Generic
 open System.IO
 
 let splitBy (separator: string) (inputString: string) : string list =
@@ -62,3 +63,11 @@ let greatestCommonFactor a b =
 
 
 let charToInt (c: char) = int c - int '0'
+
+let memoize (d: Dictionary<_, _>) fn arg =
+    match d.TryGetValue arg with
+    | true, res -> res
+    | false, _ ->
+        let res = fn arg
+        d.Add(arg, res)
+        res

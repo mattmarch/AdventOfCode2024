@@ -7,17 +7,9 @@ let parseInput input =
     let towelList, patterns = input |> splitBy "\n\n" |> unpack2
     towelList |> splitBy ", ", patterns |> splitBy "\n"
 
-let memoizer (d: Dictionary<_, _>) fn arg =
-    match d.TryGetValue arg with
-    | true, res -> res
-    | false, _ ->
-        let res = fn arg
-        d.Add(arg, res)
-        res
-
 let canMatchPattern (towels: string list) (pattern: string) =
     let memoDict = Dictionary<string, bool>()
-    let memoized = memoizer memoDict
+    let memoized = memoize memoDict
 
     let rec canMatchRemaining (remainingPattern: string) =
         let possibleNextTowels = towels |> List.filter remainingPattern.StartsWith
@@ -33,7 +25,7 @@ let canMatchPattern (towels: string list) (pattern: string) =
 
 let countPossiblePatterns (towels: string list) (pattern: string) =
     let memoDict = Dictionary<string, int64>()
-    let memoized = memoizer memoDict
+    let memoized = memoize memoDict
 
     let rec countInRemaining (remainingPattern: string) =
         let possibleNextTowels = towels |> List.filter remainingPattern.StartsWith

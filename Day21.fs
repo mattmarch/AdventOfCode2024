@@ -1,5 +1,6 @@
 ﻿module AdventOfCode2024.Day21
 
+open System.Collections.Generic
 open AdventOfCode2024.Common
 
 let numericButtonPosition button : Vec2d =
@@ -42,8 +43,6 @@ let getDirectionPressesToNextPosition fromPosition toPosition =
     @ List.replicate (abs x) horizontalDir
     @ [ A ]
 
-
-
 let getDirectionPressesToNextNumber fromButton toButton =
     let fromPos = numericButtonPosition fromButton
     let toPos = numericButtonPosition toButton
@@ -67,6 +66,7 @@ let getDirectionPressesToNextNumber fromButton toButton =
 let getDirectionPressesForCode (code: string) =
     Seq.pairwise $"A{code}"
     |> Seq.collect (fun (fromButton, toButton) -> getDirectionPressesToNextNumber fromButton toButton)
+    |> Seq.toList
 
 let getDirectionPressesToNextDirection fromDirection toDirection =
     let x, y =
@@ -84,14 +84,20 @@ let getDirectionPressesToNextDirection fromDirection toDirection =
         @ [ A ]
 
 let getDirectionPressesForDirectionSequence directions =
-    Seq.append [ A ] directions
-    |> Seq.pairwise
-    |> Seq.collect (fun (fromDirection, toDirection) -> getDirectionPressesToNextDirection fromDirection toDirection)
+    List.append [ A ] directions
+    |> List.pairwise
+    |> List.collect (fun (fromDirection, toDirection) -> getDirectionPressesToNextDirection fromDirection toDirection)
+
+let directionSequenceCache =
+    Dictionary<DirectionButton list, DirectionButton list>()
+
+let cachedGetDirectionPressesForDirectionSequence =
+    memoize directionSequenceCache getDirectionPressesForDirectionSequence
 
 let rec translateButtonPressesNRobots n directions =
     match n with
     | 0 -> directions
-    | _ -> translateButtonPressesNRobots (n - 1) (getDirectionPressesForDirectionSequence directions)
+    | _ -> translateButtonPressesNRobots (n - 1) (cachedGetDirectionPressesForDirectionSequence directions)
 
 let getComplexity n code =
     let buttonPresses =
