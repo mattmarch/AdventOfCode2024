@@ -88,11 +88,11 @@ let move map pos dir =
     | Some noCratePushedPosition when noCratePushedPosition = nextRobotPosition -> nextRobotPosition, map
     | Some endCratePosition -> nextRobotPosition, map |> Map.remove nextRobotPosition |> Map.add endCratePosition Crate
 
-let rec applyInstructions mapState steps position =
+let rec applyInstructions moveFn mapState steps position =
     match steps with
     | next :: remaining ->
-        let nextPosition, nextState = move mapState position next
-        applyInstructions nextState remaining nextPosition
+        let nextPosition, nextState = moveFn mapState position next
+        applyInstructions moveFn nextState remaining nextPosition
     | [] -> mapState
 
 let gps (x, y) = x + (100 * y)
@@ -100,11 +100,37 @@ let gps (x, y) = x + (100 * y)
 let getResult mapState =
     mapState |> Map.filter (fun _ v -> v = Crate) |> Map.keys |> Seq.sumBy gps
 
+let expandToBigWarehouse warehouseMap =
+    warehouseMap
+    |> Map.toSeq
+    |> Seq.collect (function
+        | (x, y), Wall -> [ (2 * x, y), Wall; (2 * x + 1, y), Wall ]
+        | (x, y), Crate -> [ (2 * x, y), Crate ])
+    |> Map.ofSeq
+//
+// let movePart2 map pos dir =
+//     let rec getPushedCratePositons currentPushed pos dir =
+//         let nextPos = addVec2d pos (vecFromDirection dir)
+//
+//
+//
+//         match Map.tryFind nextPos map with
+//         | Some Crate -> getPushedCratePositons currentPushed nextPos dir
+//         | Some Wall -> None
+//         | None -> Some nextPos
+//
+//     let nextRobotPosition = addVec2d pos (vecFromDirection dir)
+//
+//     match getEndCratePosition pos dir with
+//     | None -> pos, map
+//     | Some noCratePushedPosition when noCratePushedPosition = nextRobotPosition -> nextRobotPosition, map
+//     | Some endCratePosition -> nextRobotPosition, map |> Map.remove nextRobotPosition |> Map.add endCratePosition Crate
+
 let solve () =
     let input = readAllText "15" |> parseInput
 
     let result =
-        applyInstructions input.WarehouseMap input.Instructions input.RobotPosition
+        applyInstructions move input.WarehouseMap input.Instructions input.RobotPosition
         |> getResult
 
     printfn $"Day 15 - Part 1: %d{result}"

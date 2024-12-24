@@ -65,7 +65,7 @@ let traverse walls startPos endPos =
             |> List.append nextLocations
 
         match nextLocations |> List.tryFind (fun l -> l.Position = endPos) with
-        | Some { Score = s } -> s
+        | Some { Score = s } -> s, updatedLocations
         | None -> traverseNext updatedLocations
 
     traverseNext
@@ -74,8 +74,30 @@ let traverse walls startPos endPos =
             Direction = East
             Score = 0 } ]
 
+// let locationsOnPath endPos locations =
+//     let locationLookup =
+//         locations |> List.map (fun l -> (l.Position, l.Direction), l) |> Map.ofSeq
+//
+//     let rec possibleRoutesToPos path score pos =
+//
+//         let fromPaths =
+//             [ North; East; South; West ]
+//             |> List.map (directionToVec2d >> addVec2d pos)
+//             |> List.choose (fun p -> Map.tryFind p locationLookup |> Option.map (fun r -> p, r))
+//             |> List.filter (fun (_, s) -> s = score - 1 || s = score - 1001)
+//
+//         match fromPaths with
+//         | [] -> pos :: path
+//         | [ p, r ] -> possibleRoutesToPos (pos :: path) r.Score p
+//         | multipleChoices -> List.collect (fun p -> possibleRoutesToPos (pos :: path) p) multipleChoices
+//
+//     let endScore = locationLookup[endPos] |> Seq.head |> _.Score
+//     possibleRoutesToPos [] endScore endPos |> Seq.distinct
 
 let solve () =
     let startPos, endPos, walls = readLines "16" |> parseInput
-    let result = traverse walls startPos endPos
+    let result, locations = traverse walls startPos endPos
     printfn $"Day 16 - Part 1: %d{result}"
+
+// let result2 = locationsOnPath endPos locations
+// printfn $"Day 16 - Part 2: %d{Seq.length result2}"

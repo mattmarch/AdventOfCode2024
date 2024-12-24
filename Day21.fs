@@ -111,5 +111,5 @@ let solve () =
 
     printfn $"Day 21 - Part 1: %d{result}"
 
-    let result2 = input |> Seq.sumBy (getComplexity 25)
+    let result2 = input |> Seq.sumBy (getComplexity 15)
     printfn $"Day 21 - Part 2: %d{result2}"
