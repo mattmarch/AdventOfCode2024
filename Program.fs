@@ -27,7 +27,8 @@ let solutions =
       Day21.solve
       Day22.solve
       Day23.solve
-      Day24.solve ]
+      Day24.solve
+      Day25.solve ]
 
 let args = System.Environment.GetCommandLineArgs()[1..] |> Array.toList
 
